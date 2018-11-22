@@ -1,9 +1,14 @@
 <template>
   <tr>
-    <th scope="row">{{ position }}</th>
+    <th scope="row">{{ position + 1 }}</th>
     <td>{{ row.name }}</td>
     <td>{{ row.monthlyCost | toCurrency}}</td>
     <td>{{ row.yearlyCost | toCurrency}}</td>
+    <td>
+      <button type="button" class="close" aria-label="Close">
+        <span aria-hidden="true" @click="deleteRow">&times;</span>
+      </button>
+    </td>
   </tr>
 </template>
 
@@ -13,11 +18,15 @@ export default {
     return {
     }
   },
-  props: ['position', 'row']
+  props: ['position', 'row'],
+  methods: {
+    deleteRow () {
+      this.$emit('deleteRow', this.position)
+    }
+  }
 }
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 h1, h2 {
   font-weight: normal;

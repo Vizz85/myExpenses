@@ -7,10 +7,11 @@
           <th scope="col">Voce</th>
           <th scope="col">spesa mensile</th>
           <th scope="col">spesa annuale</th>
+          <th></th>
         </tr>
       </thead>
       <tbody>
-        <SingleRow v-for="(row, idx) in rows" :key="idx" :position="idx + 1" :row="row"/>
+        <SingleRow v-for="(row, idx) in rows" :key="idx" :position="idx" :row="row" @deleteRow="deleteRow"/>
       </tbody>
       <tfoot>
         <tr>
@@ -18,6 +19,7 @@
           <th scope="col">Totale</th>
           <th scope="col">{{ monthlySum | toCurrency }}</th>
           <th scope="col">{{ yearlySum | toCurrency }}</th>
+          <th></th>
         </tr>
       </tfoot>
     </table>
@@ -61,6 +63,9 @@ export default {
   },
   methods: {
     addRowMonthlyCost () {
+      if (this.costDescription === '' || this.cost === '') {
+        return
+      }
       const row = {
         name: this.costDescription,
         monthlyCost: Number(this.cost),
@@ -71,6 +76,9 @@ export default {
       this.costDescription = ''
     },
     addRowYearlyCost () {
+      if (this.costDescription === '' || this.cost === '') {
+        return
+      }
       const row = {
         name: this.costDescription,
         monthlyCost: this.cost / 12,
@@ -79,6 +87,9 @@ export default {
       this.rows.push(row)
       this.cost = ''
       this.costDescription = ''
+    },
+    deleteRow (position) {
+      this.rows.splice(position, 1)
     }
   }
 }
