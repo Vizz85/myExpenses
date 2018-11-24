@@ -48,13 +48,10 @@ export default {
   },
   data () {
     return {
-      rows: [],
+      rows: JSON.parse(window.localStorage.getItem('data')) || [],
       cost: '',
       costDescription: ''
     }
-  },
-  created () {
-    this.rows = JSON.parse(window.localStorage.getItem('data'))
   },
   watch: {
     rows () {
