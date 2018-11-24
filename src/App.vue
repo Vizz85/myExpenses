@@ -30,8 +30,8 @@
       <div class="input-group-append">
         <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">cadenza</button>
         <div class="dropdown-menu">
-          <a class="dropdown-item" href="#" @click="addRowMonthlyCost">mensile</a>
-          <a class="dropdown-item" href="#" @click="addRowYearlyCost">annuale</a>
+          <a class="dropdown-item" href="#" @click="addRow('montly')">mensile</a>
+          <a class="dropdown-item" href="#" @click="addRow('yearly')">annuale</a>
         </div>
       </div>
     </div>
@@ -56,6 +56,11 @@ export default {
   created () {
     this.rows = JSON.parse(window.localStorage.getItem('data'))
   },
+  watch: {
+    rows () {
+      this.setStorage()
+    }
+  },
   computed: {
     monthlySum () {
       return this.rows.reduce((acc, row) => acc + row.monthlyCost, 0)
@@ -65,37 +70,21 @@ export default {
     }
   },
   methods: {
-    addRowMonthlyCost () {
-      if (this.costDescription === '' || this.cost === '') {
+    addRow (type) {
+      if (!type || this.costDescription === '' || this.cost === '') {
         return
       }
       const row = {
         name: this.costDescription,
-        monthlyCost: Number(this.cost),
-        yearlyCost: this.cost * 12
+        monthlyCost: type === 'yearly' ? this.cost / 12 : Number(this.cost),
+        yearlyCost: type === 'yearly' ? Number(this.cost) : this.cost * 12
       }
       this.rows.push(row)
       this.cost = ''
       this.costDescription = ''
-      this.setStorage()
-    },
-    addRowYearlyCost () {
-      if (this.costDescription === '' || this.cost === '') {
-        return
-      }
-      const row = {
-        name: this.costDescription,
-        monthlyCost: this.cost / 12,
-        yearlyCost: Number(this.cost)
-      }
-      this.rows.push(row)
-      this.cost = ''
-      this.costDescription = ''
-      this.setStorage()
     },
     deleteRow (position) {
       this.rows.splice(position, 1)
-      this.setStorage()
     },
     setStorage () {
       window.localStorage.setItem('data', JSON.stringify(this.rows))
