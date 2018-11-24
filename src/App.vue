@@ -53,6 +53,9 @@ export default {
       costDescription: ''
     }
   },
+  created () {
+    this.rows = JSON.parse(window.localStorage.getItem('data'))
+  },
   computed: {
     monthlySum () {
       return this.rows.reduce((acc, row) => acc + row.monthlyCost, 0)
@@ -74,6 +77,7 @@ export default {
       this.rows.push(row)
       this.cost = ''
       this.costDescription = ''
+      this.setStorage()
     },
     addRowYearlyCost () {
       if (this.costDescription === '' || this.cost === '') {
@@ -87,9 +91,14 @@ export default {
       this.rows.push(row)
       this.cost = ''
       this.costDescription = ''
+      this.setStorage()
     },
     deleteRow (position) {
       this.rows.splice(position, 1)
+      this.setStorage()
+    },
+    setStorage () {
+      window.localStorage.setItem('data', JSON.stringify(this.rows))
     }
   }
 }
