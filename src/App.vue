@@ -25,7 +25,8 @@
     </table>
 
     <div class="input-group">
-      <input type="text" class="form-control" placeholder="inserisci voce" aria-label="Cost description" v-model="costDescription">
+      <input type="text" class="form-control" placeholder="inserisci voce" aria-label="Cost description" v-model="description">
+      <input type="text" class="form-control" placeholder="inserisci categoria" aria-label="Cost category" v-model="category">
       <input type="number" class="form-control" placeholder="inserisci costo" aria-label="Cost" v-model="cost">
       <div class="input-group-append">
         <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">cadenza</button>
@@ -50,7 +51,8 @@ export default {
     return {
       rows: JSON.parse(window.localStorage.getItem('data')) || [],
       cost: '',
-      costDescription: ''
+      description: '',
+      category: ''
     }
   },
   watch: {
@@ -68,17 +70,18 @@ export default {
   },
   methods: {
     addRow (type) {
-      if (!type || this.costDescription === '' || this.cost === '') {
+      if (!type || this.description === '' || this.cost === '') {
         return
       }
       const row = {
-        name: this.costDescription,
+        name: this.description,
+        category: this.category,
         monthlyCost: type === 'yearly' ? this.cost / 12 : Number(this.cost),
         yearlyCost: type === 'yearly' ? Number(this.cost) : this.cost * 12
       }
       this.rows.push(row)
       this.cost = ''
-      this.costDescription = ''
+      this.description = ''
     },
     deleteRow (position) {
       this.rows.splice(position, 1)
@@ -98,5 +101,6 @@ export default {
   text-align: center;
   color: #2c3e50;
   margin-top: 60px;
+  margin-bottom: 60px;
 }
 </style>

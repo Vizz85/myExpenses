@@ -1,7 +1,7 @@
 <template>
   <tr>
     <th scope="row">{{ position + 1 }}</th>
-    <td>{{ row.name }}</td>
+    <td>{{ row.name }} <span class="badge badge-info" v-if="row.category">{{ row.category }}</span></td>
     <td>{{ row.monthlyCost | toCurrency}}</td>
     <td>{{ row.yearlyCost | toCurrency}}</td>
     <td>
