@@ -82,6 +82,7 @@ export default {
       this.rows.push(row)
       this.cost = ''
       this.description = ''
+      this.category = ''
     },
     deleteRow (position) {
       this.rows.splice(position, 1)
