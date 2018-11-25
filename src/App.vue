@@ -36,28 +36,37 @@
         </div>
       </div>
     </div>
+
+    <pie-chart :chart-data="datacollection"></pie-chart>
   </div>
 </template>
 
 <script>
 import SingleRow from './components/SingleRow'
+import PieChart from './components/Chart'
 
 export default {
   name: 'App',
   components: {
-    SingleRow
+    SingleRow,
+    PieChart
   },
   data () {
     return {
       rows: JSON.parse(window.localStorage.getItem('data')) || [],
       cost: '',
       description: '',
-      category: ''
+      category: '',
+      datacollection: null
     }
+  },
+  mounted () {
+    this.fillData()
   },
   watch: {
     rows () {
       this.setStorage()
+      this.fillData()
     }
   },
   computed: {
@@ -89,6 +98,25 @@ export default {
     },
     setStorage () {
       window.localStorage.setItem('data', JSON.stringify(this.rows))
+    },
+    fillData () {
+      const labels = [...new Set(this.rows.map(row => row.category || 'other'))]
+      const data = []
+      labels.forEach(label => {
+        let sum = 0
+        this.rows.forEach(row => {
+          const category = row.category || 'other'
+          if (category === label) sum += row.yearlyCost
+        })
+        data.push(sum)
+      })
+      this.datacollection = {
+        labels,
+        datasets: [{
+          data,
+          backgroundColor: ['#3366CC', '#DC3912', '#FF9900', '#109618', '#990099', '#3B3EAC', '#0099C6', '#DD4477', '#66AA00', '#B82E2E', '#316395', '#994499', '#22AA99', '#AAAA11', '#6633CC', '#E67300', '#8B0707', '#329262', '#5574A6', '#3B3EAC']
+        }]
+      }
     }
   }
 }
