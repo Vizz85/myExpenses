@@ -1,43 +1,50 @@
 <template>
   <div id="app" class="container">
-    <table class="table">
-      <thead>
-        <tr>
-          <th scope="col">#</th>
-          <th scope="col">Voce</th>
-          <th scope="col">spesa mensile</th>
-          <th scope="col">spesa annuale</th>
-          <th></th>
-        </tr>
-      </thead>
-      <tbody>
-        <SingleRow v-for="(row, idx) in rows" :key="idx" :position="idx" :row="row" @deleteRow="deleteRow"/>
-      </tbody>
-      <tfoot>
-        <tr>
-          <th scope="col"></th>
-          <th scope="col">Totale</th>
-          <th scope="col">{{ monthlySum | toCurrency }}</th>
-          <th scope="col">{{ yearlySum | toCurrency }}</th>
-          <th></th>
-        </tr>
-      </tfoot>
-    </table>
+    <div class="row">
 
-    <div class="input-group">
-      <input type="text" class="form-control" placeholder="inserisci voce" aria-label="Cost description" v-model="description">
-      <input type="text" class="form-control" placeholder="inserisci categoria" aria-label="Cost category" v-model="category">
-      <input type="number" class="form-control" placeholder="inserisci costo" aria-label="Cost" v-model="cost">
-      <div class="input-group-append">
-        <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">cadenza</button>
-        <div class="dropdown-menu">
-          <a class="dropdown-item" href="#" @click="addRow('montly')">mensile</a>
-          <a class="dropdown-item" href="#" @click="addRow('yearly')">annuale</a>
+      <div class="column col-sm-12 col-lg-8">
+        <table class="table">
+          <thead>
+            <tr>
+              <th scope="col">#</th>
+              <th scope="col">Voce</th>
+              <th scope="col">spesa mensile</th>
+              <th scope="col">spesa annuale</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            <SingleRow v-for="(row, idx) in rows" :key="idx" :position="idx" :row="row" @deleteRow="deleteRow"/>
+          </tbody>
+          <tfoot>
+            <tr>
+              <th scope="col"></th>
+              <th scope="col">Totale</th>
+              <th scope="col">{{ monthlySum | toCurrency }}</th>
+              <th scope="col">{{ yearlySum | toCurrency }}</th>
+              <th></th>
+            </tr>
+          </tfoot>
+        </table>
+
+        <div class="input-group">
+          <input type="text" class="form-control" placeholder="inserisci voce" aria-label="Cost description" v-model="description">
+          <input type="text" class="form-control" placeholder="inserisci categoria" aria-label="Cost category" v-model="category">
+          <input type="number" class="form-control" placeholder="inserisci costo" aria-label="Cost" v-model="cost">
+          <div class="input-group-append">
+            <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">cadenza</button>
+            <div class="dropdown-menu">
+              <a class="dropdown-item" href="#" @click="addRow('montly')">mensile</a>
+              <a class="dropdown-item" href="#" @click="addRow('yearly')">annuale</a>
+            </div>
+          </div>
         </div>
       </div>
-    </div>
 
-    <pie-chart :chart-data="datacollection"></pie-chart>
+      <div class="column col-sm-12 col-lg-4">
+        <pie-chart :chart-data="datacollection"></pie-chart>
+      </div>
+    </div>
   </div>
 </template>
 
