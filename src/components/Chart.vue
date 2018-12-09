@@ -5,22 +5,22 @@ const { reactiveProp } = mixins
 export default {
   extends: Pie,
   mixins: [reactiveProp],
+  props: ['categorized'],
   data () {
     return {
       options: {
         tooltips: {
           callbacks: {
-            // title: function(tooltipItem, data) {
-            //   return data['labels'][tooltipItem[0]['index']];
-            // },
-            // label: function(tooltipItem, data) {
-            //   return data['datasets'][0]['data'][tooltipItem['index']];
-            // },
-            afterLabel: function (tooltipItem, data) {
-              const dataset = data['datasets'][0]
-              const total = dataset.data.reduce((sum, value) => sum + value, 0)
-              const percent = Math.round((dataset['data'][tooltipItem['index']] / total) * 100)
-              return '(' + percent + '%)'
+            label: (tooltipItem, data) => {
+              const idx = tooltipItem.index
+              return `${data.labels[idx]}: ${data.datasets[0].data[idx]}%`
+            },
+            afterLabel: (tooltipItem) => {
+              return `Yearly: ${
+                this.$options.filters.toCurrency(this.categorized.sums[tooltipItem.index].categoryYearlySum)
+              }\nMonthly: ${
+                this.$options.filters.toCurrency(this.categorized.sums[tooltipItem.index].categoryMonthlySum)
+              }`
             }
           }
         }

@@ -42,7 +42,7 @@
       </div>
 
       <div class="column col-sm-12 col-lg-4">
-        <pie-chart :chart-data="datacollection"></pie-chart>
+        <pie-chart :chart-data="datacollection" :categorized="categorized"></pie-chart>
       </div>
     </div>
   </div>
@@ -60,19 +60,25 @@ export default {
   },
   data () {
     return {
-      rows: JSON.parse(window.localStorage.getItem('data')) || [],
+      rows: [],
       cost: '',
       description: '',
       category: '',
-      datacollection: null
+      datacollection: null,
+      categorized: {
+        labels: null,
+        percents: null,
+        sums: null
+      }
     }
   },
   mounted () {
-    this.fillData()
+    this.rows = JSON.parse(window.localStorage.getItem('data'))
   },
   watch: {
     rows () {
       this.setStorage()
+      this.categorize()
       this.fillData()
     }
   },
@@ -107,23 +113,43 @@ export default {
       window.localStorage.setItem('data', JSON.stringify(this.rows))
     },
     fillData () {
-      const labels = [...new Set(this.rows.map(row => row.category || 'other'))]
-      const data = []
-      labels.forEach(label => {
-        let sum = 0
-        this.rows.forEach(row => {
-          const category = row.category || 'other'
-          if (category === label) sum += row.yearlyCost
-        })
-        data.push(sum)
-      })
+      // const labels = [...new Set(this.rows.map(row => row.category || 'other'))]
+      // const data = []
+      // labels.forEach(label => {
+      //   let sum = 0
+      //   this.rows.forEach(row => {
+      //     const category = row.category || 'other'
+      //     if (category === label) sum += row.yearlyCost
+      //   })
+      //   data.push(sum)
+      // })
       this.datacollection = {
-        labels,
+        labels: this.categorized.labels,
         datasets: [{
-          data,
+          data: this.categorized.percents,
           backgroundColor: ['#3366CC', '#DC3912', '#FF9900', '#109618', '#990099', '#3B3EAC', '#0099C6', '#DD4477', '#66AA00', '#B82E2E', '#316395', '#994499', '#22AA99', '#AAAA11', '#6633CC', '#E67300', '#8B0707', '#329262', '#5574A6', '#3B3EAC']
         }]
       }
+    },
+    categorize () {
+      this.categorized.labels = [...new Set(this.rows.map(row => row.category || 'other'))]
+      this.categorized.sums = []
+      this.categorized.percents = []
+
+      this.categorized.labels.forEach(label => {
+        let categoryYearlySum = 0
+        let categoryMonthlySum = 0
+        this.rows.forEach(row => {
+          const category = row.category || 'other'
+          if (category === label) {
+            categoryYearlySum += row.yearlyCost
+            categoryMonthlySum += row.monthlyCost
+          }
+        })
+        const percent = Math.round((categoryYearlySum / this.yearlySum) * 100)
+        this.categorized.sums.push({categoryYearlySum, categoryMonthlySum})
+        this.categorized.percents.push(percent)
+      })
     }
   }
 }
