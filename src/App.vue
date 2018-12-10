@@ -146,9 +146,9 @@ export default {
             categoryMonthlySum += row.monthlyCost
           }
         })
-        const percent = Math.round((categoryYearlySum / this.yearlySum) * 100)
+        const percent = (categoryYearlySum / this.yearlySum) * 100
         this.categorized.sums.push({categoryYearlySum, categoryMonthlySum})
-        this.categorized.percents.push(percent)
+        this.categorized.percents.push(percent.toFixed(2))
       })
     }
   }
