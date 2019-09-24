@@ -73,7 +73,7 @@ export default {
     }
   },
   mounted () {
-    this.rows = JSON.parse(window.localStorage.getItem('data'))
+    this.rows = JSON.parse(window.localStorage.getItem('data')) || []
   },
   watch: {
     rows () {
